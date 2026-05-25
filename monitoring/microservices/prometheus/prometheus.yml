@@ -1,0 +1,23 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: 'partner-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['partner-service:8081']
+
+  - job_name: 'order-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['order-service:8082']
+
+  - job_name: 'invoice-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['invoice-service:8083']
+
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['microservices-cadvisor:8080']

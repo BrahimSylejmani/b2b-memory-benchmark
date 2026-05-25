@@ -1,0 +1,176 @@
+version: '3.8'
+
+services:
+
+  # ── Databases (one per service) ──────────────────────────────────────────
+
+  partner-postgres:
+    image: postgres:16-alpine
+    container_name: partner-postgres
+    environment:
+      POSTGRES_DB: partner_db
+      POSTGRES_USER: b2b
+      POSTGRES_PASSWORD: b2b123
+    volumes:
+      - partner-postgres-data:/var/lib/postgresql/data
+    networks:
+      - microservices-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U b2b -d partner_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  order-postgres:
+    image: postgres:16-alpine
+    container_name: order-postgres
+    environment:
+      POSTGRES_DB: order_db
+      POSTGRES_USER: b2b
+      POSTGRES_PASSWORD: b2b123
+    volumes:
+      - order-postgres-data:/var/lib/postgresql/data
+    networks:
+      - microservices-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U b2b -d order_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  invoice-postgres:
+    image: postgres:16-alpine
+    container_name: invoice-postgres
+    environment:
+      POSTGRES_DB: invoice_db
+      POSTGRES_USER: b2b
+      POSTGRES_PASSWORD: b2b123
+    volumes:
+      - invoice-postgres-data:/var/lib/postgresql/data
+    networks:
+      - microservices-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U b2b -d invoice_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Services ─────────────────────────────────────────────────────────────
+
+  partner-service:
+    build: ./partner-service
+    container_name: partner-service
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://partner-postgres:5432/partner_db
+      SPRING_DATASOURCE_USERNAME: b2b
+      SPRING_DATASOURCE_PASSWORD: b2b123
+    depends_on:
+      partner-postgres:
+        condition: service_healthy
+    networks:
+      - microservices-net
+    mem_limit: 768m
+
+  order-service:
+    build: ./order-service
+    container_name: order-service
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://order-postgres:5432/order_db
+      SPRING_DATASOURCE_USERNAME: b2b
+      SPRING_DATASOURCE_PASSWORD: b2b123
+      PARTNER_SERVICE_URL: http://partner-service:8081
+    depends_on:
+      order-postgres:
+        condition: service_healthy
+      partner-service:
+        condition: service_started
+    networks:
+      - microservices-net
+    mem_limit: 768m
+
+  invoice-service:
+    build: ./invoice-service
+    container_name: invoice-service
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://invoice-postgres:5432/invoice_db
+      SPRING_DATASOURCE_USERNAME: b2b
+      SPRING_DATASOURCE_PASSWORD: b2b123
+      PARTNER_SERVICE_URL: http://partner-service:8081
+      ORDER_SERVICE_URL: http://order-service:8082
+    depends_on:
+      invoice-postgres:
+        condition: service_healthy
+      partner-service:
+        condition: service_started
+      order-service:
+        condition: service_started
+    networks:
+      - microservices-net
+    mem_limit: 768m
+
+  # ── Monitoring ───────────────────────────────────────────────────────────
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: microservices-cadvisor
+    privileged: true
+    ports:
+      - "8090:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - microservices-net
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: microservices-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ../monitoring/microservices/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.time=7d'
+    depends_on:
+      - partner-service
+      - order-service
+      - invoice-service
+      - cadvisor
+    networks:
+      - microservices-net
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: microservices-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ../monitoring/microservices/grafana/provisioning:/etc/grafana/provisioning
+      - microservices-grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - microservices-net
+
+volumes:
+  partner-postgres-data:
+  order-postgres-data:
+  invoice-postgres-data:
+  microservices-grafana-data:
+
+networks:
+  microservices-net:
+    driver: bridge

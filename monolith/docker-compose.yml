@@ -1,0 +1,93 @@
+version: '3.8'
+
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: monolith-postgres
+    environment:
+      POSTGRES_DB: b2b_monolith
+      POSTGRES_USER: b2b
+      POSTGRES_PASSWORD: b2b123
+    ports:
+      - "5432:5432"
+    volumes:
+      - monolith-postgres-data:/var/lib/postgresql/data
+    networks:
+      - monolith-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U b2b -d b2b_monolith"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  monolith:
+    build: .
+    container_name: monolith-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/b2b_monolith
+      SPRING_DATASOURCE_USERNAME: b2b
+      SPRING_DATASOURCE_PASSWORD: b2b123
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - monolith-net
+    mem_limit: 768m
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: monolith-cadvisor
+    privileged: true
+    ports:
+      - "8090:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - monolith-net
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: monolith-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ../monitoring/monolith/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.time=7d'
+    depends_on:
+      - monolith
+      - cadvisor
+    networks:
+      - monolith-net
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: monolith-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ../monitoring/monolith/grafana/provisioning:/etc/grafana/provisioning
+      - monolith-grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - monolith-net
+
+volumes:
+  monolith-postgres-data:
+  monolith-grafana-data:
+
+networks:
+  monolith-net:
+    driver: bridge

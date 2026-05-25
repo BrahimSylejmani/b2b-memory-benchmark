@@ -1,0 +1,167 @@
+{
+  "title": "B2B Microservices - Memory Analysis",
+  "uid": "b2b-microservices-memory",
+  "schemaVersion": 38,
+  "refresh": "5s",
+  "panels": [
+    {
+      "id": 1,
+      "title": "JVM Heap Used - All Services",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "jvm_memory_used_bytes{area=\"heap\", job=\"partner-service\"}",
+          "legendFormat": "Partner Heap"
+        },
+        {
+          "expr": "jvm_memory_used_bytes{area=\"heap\", job=\"order-service\"}",
+          "legendFormat": "Order Heap"
+        },
+        {
+          "expr": "jvm_memory_used_bytes{area=\"heap\", job=\"invoice-service\"}",
+          "legendFormat": "Invoice Heap"
+        },
+        {
+          "expr": "sum(jvm_memory_used_bytes{area=\"heap\"})",
+          "legendFormat": "TOTAL Heap"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "bytes" } }
+    },
+    {
+      "id": 2,
+      "title": "JVM Non-Heap - All Services",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "jvm_memory_used_bytes{area=\"nonheap\", job=\"partner-service\"}",
+          "legendFormat": "Partner Non-Heap"
+        },
+        {
+          "expr": "jvm_memory_used_bytes{area=\"nonheap\", job=\"order-service\"}",
+          "legendFormat": "Order Non-Heap"
+        },
+        {
+          "expr": "jvm_memory_used_bytes{area=\"nonheap\", job=\"invoice-service\"}",
+          "legendFormat": "Invoice Non-Heap"
+        },
+        {
+          "expr": "sum(jvm_memory_used_bytes{area=\"nonheap\"})",
+          "legendFormat": "TOTAL Non-Heap"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "bytes" } }
+    },
+    {
+      "id": 3,
+      "title": "Metaspace - All Services",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 8, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "expr": "jvm_memory_used_bytes{id=\"Metaspace\", job=\"partner-service\"}",
+          "legendFormat": "Partner Metaspace"
+        },
+        {
+          "expr": "jvm_memory_used_bytes{id=\"Metaspace\", job=\"order-service\"}",
+          "legendFormat": "Order Metaspace"
+        },
+        {
+          "expr": "jvm_memory_used_bytes{id=\"Metaspace\", job=\"invoice-service\"}",
+          "legendFormat": "Invoice Metaspace"
+        },
+        {
+          "expr": "sum(jvm_memory_used_bytes{id=\"Metaspace\"})",
+          "legendFormat": "TOTAL Metaspace"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "bytes" } }
+    },
+    {
+      "id": 4,
+      "title": "Code Cache - All Services",
+      "type": "timeseries",
+      "gridPos": { "x": 8, "y": 8, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "expr": "jvm_memory_used_bytes{id=\"CodeCache\", job=\"partner-service\"}",
+          "legendFormat": "Partner CodeCache"
+        },
+        {
+          "expr": "jvm_memory_used_bytes{id=\"CodeCache\", job=\"order-service\"}",
+          "legendFormat": "Order CodeCache"
+        },
+        {
+          "expr": "jvm_memory_used_bytes{id=\"CodeCache\", job=\"invoice-service\"}",
+          "legendFormat": "Invoice CodeCache"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "bytes" } }
+    },
+    {
+      "id": 5,
+      "title": "Container RSS Memory (cAdvisor) - All Services",
+      "type": "timeseries",
+      "gridPos": { "x": 16, "y": 8, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "expr": "container_memory_rss{name=\"partner-service\"}",
+          "legendFormat": "Partner RSS"
+        },
+        {
+          "expr": "container_memory_rss{name=\"order-service\"}",
+          "legendFormat": "Order RSS"
+        },
+        {
+          "expr": "container_memory_rss{name=\"invoice-service\"}",
+          "legendFormat": "Invoice RSS"
+        },
+        {
+          "expr": "sum(container_memory_rss{name=~\"partner-service|order-service|invoice-service\"})",
+          "legendFormat": "TOTAL RSS"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "bytes" } }
+    },
+    {
+      "id": 6,
+      "title": "GC Pause Duration - All Services",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 16, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "rate(jvm_gc_pause_seconds_sum{job=\"partner-service\"}[1m])",
+          "legendFormat": "Partner GC ({{action}})"
+        },
+        {
+          "expr": "rate(jvm_gc_pause_seconds_sum{job=\"order-service\"}[1m])",
+          "legendFormat": "Order GC ({{action}})"
+        },
+        {
+          "expr": "rate(jvm_gc_pause_seconds_sum{job=\"invoice-service\"}[1m])",
+          "legendFormat": "Invoice GC ({{action}})"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "s" } }
+    },
+    {
+      "id": 7,
+      "title": "Total Memory Summary (JVM + Container)",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 16, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum(jvm_memory_used_bytes)",
+          "legendFormat": "Total JVM Memory"
+        },
+        {
+          "expr": "sum(container_memory_usage_bytes{name=~\"partner-service|order-service|invoice-service\"})",
+          "legendFormat": "Total Container Memory"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "bytes" } }
+    }
+  ]
+}
