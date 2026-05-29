@@ -1,0 +1,9 @@
+architecture,scenario,metric,mean_mib,min_mib,max_mib,std_mib,ci95_low,ci95_high
+microservices,steady,heap_used,102.95,29.97,171.3,39.21,99.82,106.08
+microservices,steady,heap_committed,256.0,256.0,256.0,0.0,256.0,256.0
+microservices,steady,nonheap_used,107.26,105.91,108.44,0.76,107.2,107.32
+microservices,steady,metaspace,69.54,69.43,69.63,0.06,69.54,69.55
+microservices,steady,code_cache,28.54,27.31,29.63,0.69,28.49,28.6
+microservices,steady,container_rss,2464.73,2409.14,2534.29,34.83,2461.95,2467.51
+microservices,steady,container_total,4197.09,3712.32,4463.83,184.01,4182.4,4211.79
+microservices,steady,gc_count,0.16,0.0,1.02,0.37,0.13,0.19

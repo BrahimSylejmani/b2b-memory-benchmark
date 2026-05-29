@@ -1,3 +1,17 @@
 target/
 *.class
 .DS_Store
+
+# Paper & presentation artifacts (team-only)
+*.docx
+*.pptx
+*.zip
+latex_*.tex
+s3_output.log
+analysis/results/charts/
+analysis/build_paper_en.py
+analysis/build_paper_sq.py
+analysis/build_pptx.py
+analysis/generate_arch_diagrams.py
+analysis/generate_paper_charts.py
+analysis/generate_timeseries_charts.py

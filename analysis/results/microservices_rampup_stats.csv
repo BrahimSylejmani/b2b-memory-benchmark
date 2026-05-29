@@ -1,0 +1,9 @@
+architecture,scenario,metric,mean_mib,min_mib,max_mib,std_mib,ci95_low,ci95_high
+microservices,rampup,heap_used,136.0,64.73,214.87,44.56,133.1,138.91
+microservices,rampup,heap_committed,256.0,256.0,256.0,0.0,256.0,256.0
+microservices,rampup,nonheap_used,136.48,134.95,137.52,0.61,136.44,136.52
+microservices,rampup,metaspace,75.34,75.16,75.48,0.09,75.33,75.35
+microservices,rampup,code_cache,51.54,50.18,52.44,0.52,51.5,51.57
+microservices,rampup,container_rss,2749.8,1471.57,2866.96,134.55,2741.02,2758.58
+microservices,rampup,container_total,4448.61,2992.64,4676.79,177.93,4437.0,4460.22
+microservices,rampup,gc_count,59.65,0.0,833.9,192.09,47.12,72.18

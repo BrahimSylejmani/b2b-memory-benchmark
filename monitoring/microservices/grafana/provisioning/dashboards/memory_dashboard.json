@@ -81,46 +81,42 @@
     },
     {
       "id": 4,
-      "title": "Code Cache - All Services",
+      "title": "Code Cache - All Services (Java 21 CodeHeap)",
       "type": "timeseries",
       "gridPos": { "x": 8, "y": 8, "w": 8, "h": 8 },
       "targets": [
         {
-          "expr": "jvm_memory_used_bytes{id=\"CodeCache\", job=\"partner-service\"}",
-          "legendFormat": "Partner CodeCache"
+          "expr": "sum(jvm_memory_used_bytes{job=\"partner-service\", id=~\"CodeHeap.*\"})",
+          "legendFormat": "Partner Code Cache"
         },
         {
-          "expr": "jvm_memory_used_bytes{id=\"CodeCache\", job=\"order-service\"}",
-          "legendFormat": "Order CodeCache"
+          "expr": "sum(jvm_memory_used_bytes{job=\"order-service\", id=~\"CodeHeap.*\"})",
+          "legendFormat": "Order Code Cache"
         },
         {
-          "expr": "jvm_memory_used_bytes{id=\"CodeCache\", job=\"invoice-service\"}",
-          "legendFormat": "Invoice CodeCache"
+          "expr": "sum(jvm_memory_used_bytes{job=\"invoice-service\", id=~\"CodeHeap.*\"})",
+          "legendFormat": "Invoice Code Cache"
+        },
+        {
+          "expr": "sum(jvm_memory_used_bytes{id=~\"CodeHeap.*\"})",
+          "legendFormat": "TOTAL Code Cache"
         }
       ],
       "fieldConfig": { "defaults": { "unit": "bytes" } }
     },
     {
       "id": 5,
-      "title": "Container RSS Memory (cAdvisor) - All Services",
+      "title": "Container RSS Memory (cAdvisor - total Docker stack)",
       "type": "timeseries",
       "gridPos": { "x": 16, "y": 8, "w": 8, "h": 8 },
       "targets": [
         {
-          "expr": "container_memory_rss{name=\"partner-service\"}",
-          "legendFormat": "Partner RSS"
+          "expr": "container_memory_rss{id=\"/docker\", job=\"cadvisor\"}",
+          "legendFormat": "Total Docker RSS"
         },
         {
-          "expr": "container_memory_rss{name=\"order-service\"}",
-          "legendFormat": "Order RSS"
-        },
-        {
-          "expr": "container_memory_rss{name=\"invoice-service\"}",
-          "legendFormat": "Invoice RSS"
-        },
-        {
-          "expr": "sum(container_memory_rss{name=~\"partner-service|order-service|invoice-service\"})",
-          "legendFormat": "TOTAL RSS"
+          "expr": "container_memory_usage_bytes{id=\"/docker\", job=\"cadvisor\"}",
+          "legendFormat": "Total Docker Memory"
         }
       ],
       "fieldConfig": { "defaults": { "unit": "bytes" } }

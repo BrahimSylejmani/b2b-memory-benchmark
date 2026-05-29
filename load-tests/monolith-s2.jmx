@@ -25,7 +25,7 @@
            S1: STEADY LOAD — 50 concurrent users, 15 min
            (first 5 min = warmup, last 10 min = measurement)
            ══════════════════════════════════════════ -->
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="S1 - Steady 50u" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="S1 - Steady 50u" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -152,7 +152,7 @@
       <!-- ══════════════════════════════════════════
            S2: RAMP-UP — 0→200 users over 10 min
            ══════════════════════════════════════════ -->
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="S2 - Ramp-Up 0-200u" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="S2 - Ramp-Up 0-200u" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController">
           <boolProp name="LoopController.continue_forever">false</boolProp>

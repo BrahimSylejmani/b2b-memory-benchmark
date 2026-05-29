@@ -25,7 +25,7 @@
            S1: STEADY LOAD — 50 concurrent users, 15 min
            (first 5 min = warmup, last 10 min = measurement)
            ══════════════════════════════════════════ -->
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="S1 - Steady 50u" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="S1 - Steady 50u" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -227,7 +227,7 @@
            S3: EXTENDED — 100 users, 35 min
            (5 min warmup + 30 min sustained)
            ══════════════════════════════════════════ -->
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="S3 - Extended 100u 30min" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="S3 - Extended 100u 30min" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -248,6 +248,23 @@
             </elementProp>
           </collectionProp>
         </HeaderManager>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /api/partners" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{"name":"Partner ${__threadNum}","email":"p${__threadNum}${__Random(1,9999,)}@b2b.com","phone":"044100200","address":"Prishtine","taxId":"KS${__Random(100000,999999,)}"}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+          <stringProp name="HTTPSampler.port">${PORT}</stringProp>
+          <stringProp name="HTTPSampler.path">/api/partners</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+        </HTTPSamplerProxy>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET /api/partners/1" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -273,6 +290,33 @@
           <stringProp name="HTTPSampler.domain">${HOST}</stringProp>
           <stringProp name="HTTPSampler.port">${PORT}</stringProp>
           <stringProp name="HTTPSampler.path">/api/orders</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET /api/orders/1" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+          <stringProp name="HTTPSampler.port">${PORT}</stringProp>
+          <stringProp name="HTTPSampler.path">/api/orders/1</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /api/invoices" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{"orderId":1,"partnerId":1,"amount":${__Random(500,9999,)},"taxAmount":${__Random(50,999,)},"dueDate":"2026-12-31"}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+          <stringProp name="HTTPSampler.port">${PORT}</stringProp>
+          <stringProp name="HTTPSampler.path">/api/invoices</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>

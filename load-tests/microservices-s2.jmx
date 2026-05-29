@@ -44,7 +44,7 @@
       <!-- ══════════════════════════════════════════════════════════════
            S1 — Steady Load: 50 users, 15 minutes (ENABLED)
            ══════════════════════════════════════════════════════════════ -->
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="S1 Steady Load 50 Users" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="S1 Steady Load 50 Users" enabled="false">
         <intProp name="ThreadGroup.num_threads">50</intProp>
         <intProp name="ThreadGroup.ramp_time">60</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -223,7 +223,7 @@
       <!-- ══════════════════════════════════════════════════════════════
            S2 — Ramp-up: 0→200 users, 10 minutes (DISABLED)
            ══════════════════════════════════════════════════════════════ -->
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="S2 Ramp-Up 0-200 Users" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="S2 Ramp-Up 0-200 Users" enabled="true">
         <intProp name="ThreadGroup.num_threads">200</intProp>
         <intProp name="ThreadGroup.ramp_time">600</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>

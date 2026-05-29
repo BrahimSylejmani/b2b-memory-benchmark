@@ -1,0 +1,9 @@
+architecture,scenario,metric,mean_mib,min_mib,max_mib,std_mib,ci95_low,ci95_high
+monolith,steady,heap_used,82.25,0.0,510.58,142.73,75.57,88.93
+monolith,steady,heap_committed,117.72,0.0,511.0,150.09,110.69,124.74
+monolith,steady,nonheap_used,24.9,1.51,77.79,27.22,23.91,25.89
+monolith,steady,metaspace,76.3,75.47,77.79,0.9,76.23,76.37
+monolith,steady,code_cache,38.51,16.1,52.22,16.48,37.17,39.84
+monolith,steady,container_rss,2900.87,2336.62,3224.5,223.69,2883.01,2918.73
+monolith,steady,container_total,3690.89,3313.91,4179.9,238.85,3671.82,3709.97
+monolith,steady,gc_count,1067.68,0.0,8644.04,1991.3,972.79,1162.58

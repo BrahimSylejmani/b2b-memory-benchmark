@@ -26,9 +26,11 @@ MONOLITH_QUERIES = {
     "heap_committed":  'jvm_memory_committed_bytes{job="monolith", area="heap"}',
     "nonheap_used":    'jvm_memory_used_bytes{job="monolith", area="nonheap"}',
     "metaspace":       'jvm_memory_used_bytes{job="monolith", id="Metaspace"}',
-    "code_cache":      'jvm_memory_used_bytes{job="monolith", id="CodeCache"}',
-    "container_rss":   'container_memory_rss{name="monolith-app"}',
-    "container_total": 'container_memory_usage_bytes{name="monolith-app"}',
+    # Java 21 splits CodeCache into 3 CodeHeap regions
+    "code_cache":      'sum(jvm_memory_used_bytes{job="monolith", id=~"CodeHeap.*"})',
+    # macOS Docker Desktop cAdvisor exposes id label, not name
+    "container_rss":   'container_memory_rss{id="/docker", job="cadvisor"}',
+    "container_total": 'container_memory_usage_bytes{id="/docker", job="cadvisor"}',
     "gc_count":        'increase(jvm_gc_pause_seconds_count{job="monolith"}[5m])',
 }
 
@@ -37,9 +39,11 @@ MICROSERVICES_QUERIES = {
     "heap_committed":  'sum(jvm_memory_committed_bytes{area="heap"})',
     "nonheap_used":    'sum(jvm_memory_used_bytes{area="nonheap"})',
     "metaspace":       'sum(jvm_memory_used_bytes{id="Metaspace"})',
-    "code_cache":      'sum(jvm_memory_used_bytes{id="CodeCache"})',
-    "container_rss":   'sum(container_memory_rss{name=~"partner-service|order-service|invoice-service"})',
-    "container_total": 'sum(container_memory_usage_bytes{name=~"partner-service|order-service|invoice-service"})',
+    # Java 21 splits CodeCache into 3 CodeHeap regions
+    "code_cache":      'sum(jvm_memory_used_bytes{id=~"CodeHeap.*"})',
+    # macOS Docker Desktop cAdvisor — total RSS for entire Docker stack
+    "container_rss":   'container_memory_rss{id="/docker", job="cadvisor"}',
+    "container_total": 'container_memory_usage_bytes{id="/docker", job="cadvisor"}',
     "gc_count":        'sum(increase(jvm_gc_pause_seconds_count[5m]))',
 }
 

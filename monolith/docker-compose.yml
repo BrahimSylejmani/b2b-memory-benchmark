@@ -10,7 +10,7 @@ services:
       POSTGRES_USER: b2b
       POSTGRES_PASSWORD: b2b123
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - monolith-postgres-data:/var/lib/postgresql/data
     networks:
@@ -71,7 +71,7 @@ services:
     image: grafana/grafana:latest
     container_name: monolith-grafana
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin

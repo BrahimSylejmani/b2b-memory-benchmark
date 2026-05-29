@@ -11,6 +11,8 @@ services:
       POSTGRES_DB: partner_db
       POSTGRES_USER: b2b
       POSTGRES_PASSWORD: b2b123
+    ports:
+      - "5434:5432"
     volumes:
       - partner-postgres-data:/var/lib/postgresql/data
     networks:
@@ -28,6 +30,8 @@ services:
       POSTGRES_DB: order_db
       POSTGRES_USER: b2b
       POSTGRES_PASSWORD: b2b123
+    ports:
+      - "5435:5432"
     volumes:
       - order-postgres-data:/var/lib/postgresql/data
     networks:
@@ -45,6 +49,8 @@ services:
       POSTGRES_DB: invoice_db
       POSTGRES_USER: b2b
       POSTGRES_PASSWORD: b2b123
+    ports:
+      - "5436:5432"
     volumes:
       - invoice-postgres-data:/var/lib/postgresql/data
     networks:
@@ -121,7 +127,7 @@ services:
     container_name: microservices-cadvisor
     privileged: true
     ports:
-      - "8090:8080"
+      - "8091:8080"
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro
@@ -134,7 +140,7 @@ services:
     image: prom/prometheus:latest
     container_name: microservices-prometheus
     ports:
-      - "9090:9090"
+      - "9091:9090"
     volumes:
       - ../monitoring/microservices/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     command:
@@ -152,7 +158,7 @@ services:
     image: grafana/grafana:latest
     container_name: microservices-grafana
     ports:
-      - "3000:3000"
+      - "3002:3000"
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin

@@ -44,7 +44,7 @@
       <!-- ══════════════════════════════════════════════════════════════
            S1 — Steady Load: 50 users, 15 minutes (ENABLED)
            ══════════════════════════════════════════════════════════════ -->
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="S1 Steady Load 50 Users" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="S1 Steady Load 50 Users" enabled="false">
         <intProp name="ThreadGroup.num_threads">50</intProp>
         <intProp name="ThreadGroup.ramp_time">60</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -402,12 +402,12 @@
       <!-- ══════════════════════════════════════════════════════════════
            S3 — Extended Endurance: 100 users, 30 minutes (DISABLED)
            ══════════════════════════════════════════════════════════════ -->
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="S3 Extended 100 Users 30min" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="S3 Extended 100 Users 35min" enabled="true">
         <intProp name="ThreadGroup.num_threads">100</intProp>
-        <intProp name="ThreadGroup.ramp_time">120</intProp>
+        <intProp name="ThreadGroup.ramp_time">60</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">1800</stringProp>
+        <stringProp name="ThreadGroup.duration">2100</stringProp>
         <stringProp name="ThreadGroup.delay">0</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
